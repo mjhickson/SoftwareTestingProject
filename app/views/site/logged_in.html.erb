@@ -1,0 +1,58 @@
+<% @class = 'app nothing-selected' %>
+<% content_for :head do %>
+  <% if ENV['FONT_STYLESHEET'] %>
+  <link rel="stylesheet" type="text/css" href="<%= ENV['FONT_STYLESHEET'] %>" />
+  <% end %>
+<% end %>
+
+<table class="app-wrap" cellpadding="0">
+  <tbody>
+    <tr>
+      <td class="feeds-column app-panel" data-behavior="content_column" <%= resizable 'feeds' %>>
+        <div class="feeds-wrap full-height">
+          <div class="view-toolbar">
+            <%= render partial: 'shared/buttons/view_all' %>
+            <%= render partial: 'shared/buttons/view_unread' %>
+            <%= render partial: 'shared/buttons/subscribe' %>
+          </div>
+          <div class="subscribe-wrap">
+            <%= render partial: "subscriptions/form" %>
+          </div>
+          <div class="feeds">
+            <ul data-behavior="feeds_target">
+              <%= render partial: 'feeds/feeds', locals: {collections: @collections, saved_searches: @saved_searches, tags: @tags, feeds: @feeds} %>
+            </ul>
+          </div>
+          <%= render partial: 'shared/feeds_toolbar' %>
+        </div>
+      </td>
+      <td class="entries-column app-panel" data-behavior="content_column" <%= resizable 'entries' %>>
+        <div class="full-height entries-wrap">
+          <div class="entries-header" data-behavior="entries-header"></div>
+          <div class="entries">
+            <ul data-behavior="entries_target"></ul>
+          </div>
+          <%= render partial: 'shared/feeds_toolbar' %>
+        </div>
+      </td>
+      <td class="entry-column app-panel" data-behavior="content_column">
+        <div class="full-height entry-wrap">
+        	<div class="entry-content-wrap full-height <%= @user.entry_width %> font-size-<%= @user.font_size || 5 %> font-<%= @user.font || 'default' %>" data-font-size="<%= @user.font_size || 5 %>"  data-font="<%= @user.font || 'default' %>" data-behavior="entry_content_target">
+
+        	</div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="hide" data-behavior="pagination"></div>
+<div class="hide" data-behavior="entry_settings_content">
+  <%= render partial: 'shared/entry_settings' %>
+</div>
+<%= render partial: "shared/keyboard_shortcuts_wrap" %>
+<%= render partial: "shared/data", locals: {mobile: false} %>
+<%= render partial: "shared/resizable_form" %>
+
+<iframe src="https://www.subtome.com/register-no-ui.html?name=Feedbin&url=<%= "#{get_protocol}//#{request.host}" %>/?subscribe={feed}" class="hide"></iframe>
+

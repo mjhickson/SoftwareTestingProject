@@ -1,0 +1,37 @@
+<% present entry do |entry_presenter| %>
+<div data-entry-id="<%= entry.id %>">
+  <div class="entry-toolbar">
+    <button class="back-button" data-behavior="show_entries"></button>
+    <%= entry_presenter.favicon(entry.feed.site_url) %>
+    <%= link_to strip_tags(entry.feed.title), entry.feed.site_url, class: 'entry-feed-title', data: {behavior: 'user_title', feed_id: entry.feed.id}, target: '_blank' %>
+    <div class="entry-buttons">
+      <%= render partial: "shared/entry_settings_button" %>
+      <%= render partial: "unread_entries/form", locals: {entry: entry, read: read} %>
+      <%= render partial: "starred_entries/form", locals: {entry: entry, starred: starred} %>
+      <%= render partial: "entries/toggle_content", locals: {content_view: content_view, entry: entry} %>
+      <%= render partial: "sharing_services/sharing_service_button", locals: {services: services} %>
+    </div>
+  </div>
+  <div class="entry-settings-wrap" data-behavior="entry_settings_target"></div>
+  <div class="entry-content">
+    <div class="entry-inner" <%= rtl(entry_presenter.content) %>>
+      <header class="entry-header">
+        <%= link_to entry.fully_qualified_url, target: '_blank' do  %>
+        <h1><%= entry_presenter.title %></h1>
+        <% end %>
+        <p class="post-meta"><% if entry.author %> by <%= entry_presenter.author %> | <% end %> <span data-behavior="user_title" data-feed-id="<%= entry.feed.id %>"><%= strip_tags(entry.feed.title) %></span></p>
+        <p class="post-meta"><time datetime="<%= entry_presenter.datetime %>"><%= entry_presenter.published_date %></time></p>
+      </header>
+      <div data-behavior="entry_content_wrap" class="content-styles">
+        <% if entry.data %>
+        <div class="media-container">
+          <%= entry_presenter.media.html_safe %>
+        </div>
+        <script>$('video, audio', '.media-container').mediaelementplayer();</script>
+        <% end %>
+        <%= raw entry_presenter.content %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>

@@ -1,0 +1,36 @@
+var entries = '<%= j render partial: "entries/entry", collection: @entries %>';
+var header = '<%= j render partial: "entries/entries_header", locals: {feed: @feed || nil} %>';
+
+<% if @append %>
+	feedbin.appendEntries(entries, header);
+<% else %>
+	feedbin.updateEntries(entries, header);
+<% end %>
+
+feedbin.localizeTime($('[data-behavior~=entries_target]'))
+
+feedbin.applyUserTitles()
+
+$('[data-behavior~=show_tags_form]').replaceWith('<%= j render partial: "shared/buttons/tag", locals: {feed: @feed || nil, tags: @tags, tag: @tag || nil} %>');
+
+<% if @type && @type == 'tag' %>
+  $('[data-behavior~=unsubscribe]').replaceWith('<%= j render partial: "shared/buttons/destroy_tag", locals: {tag: @tag} %>');
+<% elsif @type && @type == 'saved_search' %>
+  $('[data-behavior~=unsubscribe]').replaceWith('<%= j render partial: "shared/buttons/destroy_saved_search", locals: {saved_search: @saved_search} %>');
+<% else %>
+  $('[data-behavior~=unsubscribe]').replaceWith('<%= j render partial: "shared/buttons/unsubscribe", locals: {feed: @feed || nil} %>');
+<% end %>
+
+feedbin.updatePager('<%= j will_paginate(@page_query) %>');
+
+feedbin.data.viewMode = "<%= j session[:view_mode] %>";
+
+feedbin.preloadEntries(<%= @entries.map{ |entry| entry.id }.to_json.html_safe %>);
+
+<% if @search %>
+feedbin.markReadData = {type: "search", data: "<%= @escaped_query %>", message: "Mark search for <%= @escaped_query %> as read?"}
+$('.saved-search-wrap').removeClass('show')
+$('.app').addClass('feed-selected').removeClass('nothing-selected entry-selected');
+$('[data-behavior~=save_search_link]').removeAttr('disabled');
+$('[data-behavior~=saved_search_form_target]').html('<%= j render partial: "saved_searches/form", locals: {saved_search: @saved_search} %>');
+<% end %>

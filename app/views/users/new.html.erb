@@ -1,0 +1,46 @@
+<% @class = 'signup' %>
+<div class="signup-wrap pad-bottom">
+  <a href="/"><%= render partial: "shared/svg/logo" %></a>
+
+  <h3 class="box-header">Sign Up <span class="trial-promo">14 day free trial</span></h3>
+  <div class="box">
+    <div data-behavior="stripe_error" class="alert alert-error hide"></div>
+
+    <%= form_for @user, html: { data: { behavior: 'credit_card_form' } } do |f| %>
+      <% if @user.errors.any? %>
+        <div class="alert alert-error">
+          <%= @user.errors.full_messages.join('. ') %>.
+        </div>
+      <% end %>
+
+      <% if @user.plan_id %>
+        <%= f.hidden_field :plan_id %>
+      <% end %>
+
+      <% if @coupon_valid == true %>
+        <%= f.hidden_field :coupon_code %>
+        <div class="alert alert-success">
+          Your coupon gets you a free account.
+        </div>
+      <% elsif @coupon_valid == false %>
+        <div class="alert alert-error">
+          Invalid coupon.
+        </div>
+      <% end %>
+
+
+      <%= f.hidden_field :stripe_token, data: { behavior: 'stripe_token' } %>
+
+      <%= f.email_field :email, autofocus: true, placeholder: 'Email', tabindex: 1 %>
+
+      <%= f.password_field :password, placeholder: 'Password', tabindex: 2 %>
+
+      <div class="text-right">
+        <%= f.submit "Sign up", class: 'button', tabindex: 3 %>
+      </div>
+
+    <% end %>
+  </div>
+
+  <p class="align-center x-large muted">Already have an account? <%= link_to "Log In", login_path %></p>
+</div>
