@@ -1,0 +1,12 @@
+# 2013-11-23 20:05:15:784 [HEAD] ("entries")
+#
+curl -I "http://localhost:9200/entries"
+
+# 2013-11-23 20:05:15:784 [HEAD] ("entries")
+#
+curl -I "http://localhost:9200/entries"
+
+# 2013-11-23 20:05:15:785 [Errno::ECONNREFUSED]
+
+# 2013-11-23 20:05:15:785 [Errno::ECONNREFUSED]
+
